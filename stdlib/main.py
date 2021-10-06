@@ -29,7 +29,7 @@ def execute(task: ExternalTask):
         variables = task.get_variables()
         variables["BpmnException"] = BpmnException
 
-        exec(code, globals=variables)
+        exec(variables.get("python", ""), variables)
 
         # clean trash in globals
         if "__builtins__" in variables:
