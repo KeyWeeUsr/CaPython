@@ -1,5 +1,6 @@
 import sys
 from argparse import ArgumentParser, Namespace
+from os import environ
 from subprocess import Popen
 
 
@@ -9,7 +10,7 @@ def cmd(*args, **kwargs):
     if "skip" in kwargs:
         should_skip = kwargs.pop("skip")
 
-    proc = Popen(*args, **kwargs)
+    proc = Popen(*args, **kwargs, env=environ)
     proc.communicate()
     if proc.returncode and not should_skip:
         sys.exit(proc.returncode)
