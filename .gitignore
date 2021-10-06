@@ -1,0 +1,14 @@
+*~
+*#
+.#*
+output/**
+**__pycache__**
+*.pyc
+*.swp
+*.tmp
+*.gv
+*.egg-info
+build
+dist
+*.coverage*
+htmlcov
