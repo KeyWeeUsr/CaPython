@@ -59,5 +59,8 @@ def handler(task: ExternalTask) -> TaskResult:
 
 
 if __name__ == '__main__':
-    worker = ExternalTaskWorker(worker_id="1", config=DEFAULT_CONFIG)
+    worker = ExternalTaskWorker(
+        worker_id="1", base_url="http://camunda:8080/engine-rest",
+        config=DEFAULT_CONFIG
+    )
     worker.subscribe(["topic"], handler)
