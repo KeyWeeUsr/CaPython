@@ -35,16 +35,46 @@ pprint(globals())</camunda:inputParameter>
         <camunda:inputOutput>
           <camunda:inputParameter name="python">print("getting vars")
 from pprint import pprint
-pprint(globals())</camunda:inputParameter>
+pprint(globals())
+assert to_capture == 123</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0ucaqr7</bpmn:incoming>
-      <bpmn:outgoing>Flow_0fnv5wh</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ih1kfe</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_16tlug1">
-      <bpmn:incoming>Flow_0fnv5wh</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0fnv5wh" sourceRef="Activity_1qmtupd" targetRef="Event_16tlug1" />
+    <bpmn:sequenceFlow id="Flow_1ih1kfe" sourceRef="Activity_1qmtupd" targetRef="Activity_0s04dla" />
+    <bpmn:serviceTask id="Activity_0s04dla" name="throw BPMN error" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">raise BpmnException("bpmn-code-123")</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ih1kfe</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ps9fq7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ps9fq7" sourceRef="Activity_0s04dla" targetRef="Activity_0b785hr" />
+    <bpmn:serviceTask id="Activity_0b785hr" name="Failed to throw BPMN error" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">assert False, "This should never happen"</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ps9fq7</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0fwk32s" attachedToRef="Activity_0s04dla">
+      <bpmn:outgoing>Flow_126r3gs</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_18zcocg" camunda:errorCodeVariable="extracted_bpmn_code" camunda:errorMessageVariable="extracted_bpmn_msg" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_126r3gs" sourceRef="Event_0fwk32s" targetRef="Activity_1dh8spn" />
+    <bpmn:serviceTask id="Activity_1dh8spn" name="BPMN error encountered" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("BPMN code -&gt;", extracted_bpmn_code)
+print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_126r3gs</bpmn:incoming>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1y38g9w">
@@ -60,9 +90,21 @@ pprint(globals())</camunda:inputParameter>
         <di:waypoint x="530" y="117" />
         <di:waypoint x="590" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0fnv5wh_di" bpmnElement="Flow_0fnv5wh">
+      <bpmndi:BPMNEdge id="Flow_1ih1kfe_di" bpmnElement="Flow_1ih1kfe">
         <di:waypoint x="690" y="117" />
-        <di:waypoint x="752" y="117" />
+        <di:waypoint x="750" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ps9fq7_di" bpmnElement="Flow_0ps9fq7">
+        <di:waypoint x="800" y="157" />
+        <di:waypoint x="800" y="220" />
+        <di:waypoint x="197" y="220" />
+        <di:waypoint x="197" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_126r3gs_di" bpmnElement="Flow_126r3gs">
+        <di:waypoint x="850" y="175" />
+        <di:waypoint x="850" y="260" />
+        <di:waypoint x="320" y="260" />
+        <di:waypoint x="320" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
@@ -76,8 +118,17 @@ pprint(globals())</camunda:inputParameter>
       <bpmndi:BPMNShape id="Activity_14gm7gf_di" bpmnElement="Activity_1qmtupd">
         <dc:Bounds x="590" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_16tlug1_di" bpmnElement="Event_16tlug1">
-        <dc:Bounds x="752" y="99" width="36" height="36" />
+      <bpmndi:BPMNShape id="Activity_0pwtq75_di" bpmnElement="Activity_0s04dla">
+        <dc:Bounds x="750" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19xlwvs_di" bpmnElement="Activity_0b785hr">
+        <dc:Bounds x="147" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17qhs6i_di" bpmnElement="Activity_1dh8spn">
+        <dc:Bounds x="270" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0da66gd_di" bpmnElement="Event_0fwk32s">
+        <dc:Bounds x="832" y="139" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
