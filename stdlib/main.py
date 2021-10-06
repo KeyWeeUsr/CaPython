@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 from traceback import format_exc
 
@@ -24,6 +25,13 @@ class BpmnException(Exception):
         self.bpmn_code = code
 
 
+def serialize(item):
+    default = f"(unserializable) {repr(item)}"
+    if isinstance(item, type("dummy", (), {})):
+        return f"I'm {item}, handle me, somehow"
+    return default
+
+
 def execute(task: ExternalTask):
     try:
         variables = task.get_variables()
@@ -36,6 +44,7 @@ def execute(task: ExternalTask):
             del variables["__builtins__"]
             del variables["BpmnException"]
 
+        variables = json.loads(json.dumps(variables, default=serialize))
         return task.complete(variables)
 
     except Exception as exc:
