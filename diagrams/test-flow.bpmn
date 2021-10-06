@@ -80,7 +80,7 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_07t199v" name="boolean operators" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("-" * 12, "DONE, "-" * 12)</camunda:inputParameter>
+          <camunda:inputParameter name="python" />
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0owe0c6</bpmn:incoming>
@@ -105,7 +105,7 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
     <bpmn:endEvent id="Event_0fq0p4p">
       <bpmn:incoming>Flow_035liz6</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_035liz6" sourceRef="Activity_1p7nrad" targetRef="Event_0fq0p4p" />
+    <bpmn:sequenceFlow id="Flow_035liz6" sourceRef="Activity_0dxlbry" targetRef="Event_0fq0p4p" />
     <bpmn:serviceTask id="Activity_15put6n" name="comparisons" camunda:type="external" camunda:topic="topic">
       <bpmn:incoming>Flow_0w58wbv</bpmn:incoming>
       <bpmn:outgoing>Flow_1ltifbp</bpmn:outgoing>
@@ -120,7 +120,7 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_1p7nrad" name="context managers" camunda:type="external" camunda:topic="topic">
       <bpmn:incoming>Flow_0rdqas2</bpmn:incoming>
-      <bpmn:outgoing>Flow_035liz6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0nhw7cm</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_0juzh4i" name="memory views" camunda:type="external" camunda:topic="topic">
       <bpmn:incoming>Flow_0v3cmzr</bpmn:incoming>
@@ -169,6 +169,16 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_07270ow" name="additional int methods" camunda:type="external" camunda:topic="topic">
       <bpmn:incoming>Flow_05vjmyt</bpmn:incoming>
       <bpmn:outgoing>Flow_1lvvbcm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0nhw7cm" sourceRef="Activity_1p7nrad" targetRef="Activity_0dxlbry" />
+    <bpmn:serviceTask id="Activity_0dxlbry" name="finished" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("-" * 12, "DONE", "-" * 12)</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0nhw7cm</bpmn:incoming>
+      <bpmn:outgoing>Flow_035liz6</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:group id="Group_075rxgu" categoryValueRef="CategoryValue_1f73vce" />
   </bpmn:process>
@@ -281,8 +291,12 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
         <di:waypoint x="320" y="740" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_035liz6_di" bpmnElement="Flow_035liz6">
-        <di:waypoint x="370" y="780" />
+        <di:waypoint x="520" y="780" />
         <di:waypoint x="782" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nhw7cm_di" bpmnElement="Flow_0nhw7cm">
+        <di:waypoint x="370" y="780" />
+        <di:waypoint x="420" y="780" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
@@ -358,6 +372,9 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_11ctgdj_di" bpmnElement="Activity_07270ow">
         <dc:Bounds x="270" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_012z0pu_di" bpmnElement="Activity_0dxlbry">
+        <dc:Bounds x="420" y="740" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0da66gd_di" bpmnElement="Event_0fwk32s">
         <dc:Bounds x="832" y="139" width="36" height="36" />
