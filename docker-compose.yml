@@ -16,4 +16,4 @@ services:
       - ./stdlib:/app
     entrypoint:
       - python
-      - /app/main.py
+      - /app/start.py
