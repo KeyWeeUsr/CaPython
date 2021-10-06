@@ -32,6 +32,16 @@ def serialize(item):
     return default
 
 
+def clean_vars(variables):
+    if "__builtins__" in variables:
+        del variables["__builtins__"]
+        del variables["BpmnException"]
+
+
+def serialize_vars(variables):
+    return json.loads(json.dumps(variables, default=serialize))
+
+
 def execute(task: ExternalTask):
     try:
         variables = task.get_variables()
@@ -40,23 +50,24 @@ def execute(task: ExternalTask):
         exec(variables.get("python", ""), variables)
 
         # clean trash in globals
-        if "__builtins__" in variables:
-            del variables["__builtins__"]
-            del variables["BpmnException"]
+        clean_vars(variables)
 
-        variables = json.loads(json.dumps(variables, default=serialize))
+        variables = serialize_vars(variables)
         return task.complete(variables)
 
     except Exception as exc:
         formatted = format_exc()
-        variables = json.loads(json.dumps(variables, default=serialize))
+
+        clean_vars(variables)
+        variables = serialize_vars(variables)
+
         if isinstance(exc, BpmnException):
             return task.bpmn_error(
                 error_code=str(exc.bpmn_code), error_message=formatted,
                 variables=variables
             )
         return task.failure(
-            error_message="Python Exception",  error_details=format_exc(),
+            error_message="Python Exception",  error_details=formatted,
             max_retries=0, retry_timeout=0
         )
 
