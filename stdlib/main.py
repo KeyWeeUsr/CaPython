@@ -34,6 +34,7 @@ def execute(task: ExternalTask):
         # clean trash in globals
         if "__builtins__" in variables:
             del variables["__builtins__"]
+            del variables["BpmnException"]
 
         return task.complete(variables)
 
