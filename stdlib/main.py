@@ -49,6 +49,7 @@ def execute(task: ExternalTask):
 
     except Exception as exc:
         formatted = format_exc()
+        variables = json.loads(json.dumps(variables, default=serialize))
         if isinstance(exc, BpmnException):
             return task.bpmn_error(
                 error_code=str(exc.bpmn_code), error_message=formatted,
