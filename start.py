@@ -30,7 +30,7 @@ def main():
     args = parser.parse_args()
 
     cmd(["docker-compose", "up", "-d"])
-    dexec(stdlib_name, ["pip", "install", "-U", "pip"])
+    dexec("stdlib", "pip", "install", "-U", "pip")
 
 
 if __name__ == "__main__":
