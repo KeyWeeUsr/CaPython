@@ -47,7 +47,7 @@ def execute(task: ExternalTask):
         variables = task.get_variables()
         variables["BpmnException"] = BpmnException
 
-        exec(variables.get("python", ""), variables)
+        exec(variables.get("python", "") or "", variables)
 
         # clean trash in globals
         clean_vars(variables)
