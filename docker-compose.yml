@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  camunda:
+    image: camunda/camunda-bpm-platform:latest
+    container_name: camunda
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  stdlib:
+    image: python:alpine
+    container_name: camunda-stdlib
+    ports:
+      - "127.0.0.1:9090:8080"
+    volumes:
+      - ./stdlib:/app
