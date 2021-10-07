@@ -13,7 +13,7 @@ def cmd(*args, **kwargs):
 def main():
     cmd(["pip", "install", "-U", "pip"])
     cmd(["pip", "install", "camunda-external-task-client-python3"])
-    cmd(["python", "/app/main.py"])
+    cmd(["python", "-u", "/app/main.py"])
 
 
 if __name__ == "__main__":
