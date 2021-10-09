@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1qeit27" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.10.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="SamplePythonFlow" name="SamplePythonFlow" isExecutable="true" camunda:versionTag="1.0">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0dslx3u</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0dslx3u" sourceRef="StartEvent_1" targetRef="Activity_0at0kty" />
+    <bpmn:serviceTask id="Activity_0at0kty" name="dummy print" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("hello python")
+</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dslx3u</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s5zkrc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1s5zkrc" sourceRef="Activity_0at0kty" targetRef="Activity_0g1ih53" />
+    <bpmn:sequenceFlow id="Flow_0ucaqr7" sourceRef="Activity_0g1ih53" targetRef="Activity_1qmtupd" />
+    <bpmn:serviceTask id="Activity_0g1ih53" name="capture vars" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("setting global to_capture=123")
+to_capture=123
+</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1s5zkrc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ucaqr7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1qmtupd" name="getting vars" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print(
+    "getting to_capture variable:",
+    globals().get("to_capture", "&lt;missing&gt;")
+)
+assert to_capture == 123</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ucaqr7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ih1kfe</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ih1kfe" sourceRef="Activity_1qmtupd" targetRef="Activity_0s04dla" />
+    <bpmn:serviceTask id="Activity_0s04dla" name="throw BPMN error" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">raise BpmnException("bpmn-code-123")</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ih1kfe</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ps9fq7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ps9fq7" sourceRef="Activity_0s04dla" targetRef="Activity_0b785hr" />
+    <bpmn:serviceTask id="Activity_0b785hr" name="Failed to throw BPMN error" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">assert False, "This should never happen"</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ps9fq7</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0fwk32s" attachedToRef="Activity_0s04dla">
+      <bpmn:outgoing>Flow_126r3gs</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_18zcocg" camunda:errorCodeVariable="extracted_bpmn_code" camunda:errorMessageVariable="extracted_bpmn_msg" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_126r3gs" sourceRef="Event_0fwk32s" targetRef="Activity_1dh8spn" />
+    <bpmn:serviceTask id="Activity_1dh8spn" name="BPMN error encountered" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("BPMN code -&gt;", extracted_bpmn_code)
+print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_126r3gs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0owe0c6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0owe0c6" sourceRef="Activity_1dh8spn" targetRef="Activity_07t199v" />
+    <bpmn:serviceTask id="Activity_07t199v" name="boolean operators" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("and")
+assert (True and True) == True, True and True
+assert (True and False) == False, True and False
+print("or")
+assert (True or True) == True, True or True
+assert (True or False) == True, True or False
+print("not")
+assert (not True) == False, not True
+assert not False, not False
+</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0owe0c6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0w58wbv</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0w58wbv" sourceRef="Activity_07t199v" targetRef="Activity_15put6n" />
+    <bpmn:sequenceFlow id="Flow_1ltifbp" sourceRef="Activity_15put6n" targetRef="Activity_0uzlrdg" />
+    <bpmn:sequenceFlow id="Flow_0wbh8kr" sourceRef="Activity_0uzlrdg" targetRef="Activity_1qwvrro" />
+    <bpmn:serviceTask id="Activity_15put6n" name="comparisons" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">assert 1 &lt; 2
+assert 1 &lt;= 1
+assert 2 &gt; 1
+assert 1 &gt;= 1
+assert 1 == 1
+assert 2 != 1
+assert None is not object</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0w58wbv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ltifbp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0uzlrdg" name="numeric types" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("int")
+assert 1 + 1 == 2
+assert 1 - 1 == 0
+assert 4 * 5 == 20
+assert int(round(20 / 4)) == 5
+assert 20 // 4 == 5
+assert 20 % 3 == 2
+assert abs(1) == 1
+assert abs(-1) == 1
+assert int("1") == 1
+assert divmod(1, 2) == (0, 1)
+
+print("float")
+assert str(round(1.0 + 1.0, 1)) == "2.0"
+assert str(round(1.0 - 1.0, 1)) == "0.0"
+assert str(round(4.0 * 5.0, 1)) == "20.0"
+assert str(round(20 / 4, 1)) == "5.0"
+assert str(round(20.0 // 4.0, 1)) == "5.0"
+assert str(round(20.0 % 3.0, 1)) == "2.0"
+assert str(round(abs(1.0), 1)) == "1.0"
+assert str(round(abs(-1.0), 1)) == "1.0"
+assert str(round(float("1.0"), 1)) == "1.0"
+assert [str(round(num, 1)) for num in divmod(1.0, 2.0)] == ['0.0', '1.0']
+assert pow(4, 6) == 4096
+assert str(round(pow(4.0, 6.0), 1)) == "4096.0"</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ltifbp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wbh8kr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0dxlbry" name="finished" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">print("-" * 12, "DONE", "-" * 12)</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_157jao0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fxcfj4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1fxcfj4" sourceRef="Activity_0dxlbry" targetRef="Event_10a3a0n" />
+    <bpmn:endEvent id="Event_10a3a0n">
+      <bpmn:incoming>Flow_1fxcfj4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_1qwvrro" name="globals()" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">from pprint import pprint
+x = 123
+
+pprint(globals())</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0wbh8kr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fx6w3z</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0fx6w3z" sourceRef="Activity_1qwvrro" targetRef="Activity_1ojycex" />
+    <bpmn:sequenceFlow id="Flow_0cyfcrf" sourceRef="Activity_1ojycex" targetRef="Activity_0r165t1" />
+    <bpmn:sequenceFlow id="Flow_157jao0" sourceRef="Activity_0r165t1" targetRef="Activity_0dxlbry" />
+    <bpmn:serviceTask id="Activity_1ojycex" name="3rd-party&#10;(requirements)" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">import requests
+print(requests)</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0fx6w3z</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cyfcrf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0r165t1" name="3rd-party&#10;(code)" camunda:type="external" camunda:topic="topic">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="python">import pip
+pip.main(["install", "beautifulsoup4"])
+from bs4 import BeautifulSoup
+print(BeautifulSoup)</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0cyfcrf</bpmn:incoming>
+      <bpmn:outgoing>Flow_157jao0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:group id="Group_075rxgu" categoryValueRef="CategoryValue_1f73vce" />
+  </bpmn:process>
+  <bpmn:category id="Category_1u8jib6">
+    <bpmn:categoryValue id="CategoryValue_1f73vce" value="Samples" />
+  </bpmn:category>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SamplePythonFlow">
+      <bpmndi:BPMNEdge id="Flow_157jao0_di" bpmnElement="Flow_157jao0">
+        <di:waypoint x="1170" y="117" />
+        <di:waypoint x="1230" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cyfcrf_di" bpmnElement="Flow_0cyfcrf">
+        <di:waypoint x="1010" y="117" />
+        <di:waypoint x="1070" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fx6w3z_di" bpmnElement="Flow_0fx6w3z">
+        <di:waypoint x="850" y="340" />
+        <di:waypoint x="880" y="340" />
+        <di:waypoint x="880" y="117" />
+        <di:waypoint x="910" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fxcfj4_di" bpmnElement="Flow_1fxcfj4">
+        <di:waypoint x="1330" y="117" />
+        <di:waypoint x="1392" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wbh8kr_di" bpmnElement="Flow_0wbh8kr">
+        <di:waypoint x="690" y="340" />
+        <di:waypoint x="750" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ltifbp_di" bpmnElement="Flow_1ltifbp">
+        <di:waypoint x="530" y="340" />
+        <di:waypoint x="590" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w58wbv_di" bpmnElement="Flow_0w58wbv">
+        <di:waypoint x="370" y="340" />
+        <di:waypoint x="430" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0owe0c6_di" bpmnElement="Flow_0owe0c6">
+        <di:waypoint x="247" y="340" />
+        <di:waypoint x="270" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_126r3gs_di" bpmnElement="Flow_126r3gs">
+        <di:waypoint x="850" y="175" />
+        <di:waypoint x="850" y="270" />
+        <di:waypoint x="197" y="270" />
+        <di:waypoint x="197" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ps9fq7_di" bpmnElement="Flow_0ps9fq7">
+        <di:waypoint x="800" y="157" />
+        <di:waypoint x="800" y="220" />
+        <di:waypoint x="247" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ih1kfe_di" bpmnElement="Flow_1ih1kfe">
+        <di:waypoint x="690" y="117" />
+        <di:waypoint x="750" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ucaqr7_di" bpmnElement="Flow_0ucaqr7">
+        <di:waypoint x="530" y="117" />
+        <di:waypoint x="590" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s5zkrc_di" bpmnElement="Flow_1s5zkrc">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dslx3u_di" bpmnElement="Flow_0dslx3u">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nc5u03_di" bpmnElement="Activity_0at0kty">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wnv3k0_di" bpmnElement="Activity_0g1ih53">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14gm7gf_di" bpmnElement="Activity_1qmtupd">
+        <dc:Bounds x="590" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pwtq75_di" bpmnElement="Activity_0s04dla">
+        <dc:Bounds x="750" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19xlwvs_di" bpmnElement="Activity_0b785hr">
+        <dc:Bounds x="147" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17qhs6i_di" bpmnElement="Activity_1dh8spn">
+        <dc:Bounds x="147" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_006guy8_di" bpmnElement="Activity_07t199v">
+        <dc:Bounds x="270" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11m2c29_di" bpmnElement="Activity_15put6n">
+        <dc:Bounds x="430" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_151m6y4_di" bpmnElement="Activity_0uzlrdg">
+        <dc:Bounds x="590" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_012z0pu_di" bpmnElement="Activity_0dxlbry">
+        <dc:Bounds x="1230" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10a3a0n_di" bpmnElement="Event_10a3a0n">
+        <dc:Bounds x="1392" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qap4iu_di" bpmnElement="Activity_1qwvrro">
+        <dc:Bounds x="750" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17pf36h_di" bpmnElement="Activity_1ojycex">
+        <dc:Bounds x="910" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13zy5wn_di" bpmnElement="Activity_0r165t1">
+        <dc:Bounds x="1070" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Group_075rxgu_di" bpmnElement="Group_075rxgu">
+        <dc:Bounds x="256" y="280" width="612" height="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="543" y="287" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0da66gd_di" bpmnElement="Event_0fwk32s">
+        <dc:Bounds x="832" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
