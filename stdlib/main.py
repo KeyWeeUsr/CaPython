@@ -46,10 +46,18 @@ def serialize(item):
     return default
 
 
+def prepare_vars(task):
+    variables = task.get_variables()
+    variables["BpmnException"] = BpmnException
+    variables["__task__"] = task
+    return variables
+
+
 def clean_vars(variables):
     if "__builtins__" in variables:
         del variables["__builtins__"]
         del variables["BpmnException"]
+        del variables["__task__"]
 
 
 def serialize_vars(variables):
@@ -58,9 +66,7 @@ def serialize_vars(variables):
 
 def execute(task: ExternalTask):
     try:
-        variables = task.get_variables()
-        variables["BpmnException"] = BpmnException
-
+        variables = prepare_vars(task)
         exec(variables.get(CAPYTHON_SCRIPT_ENTRYPOINT, "") or "", variables)
 
         # clean trash in globals
