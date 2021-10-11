@@ -1,5 +1,4 @@
 import json
-from enum import Enum
 from os import environ
 from traceback import format_exc
 from uuid import uuid4
@@ -76,18 +75,23 @@ def serialize_vars(variables):
     return json.loads(json.dumps(variables, default=serialize))
 
 
-def execute(task: ExternalTask):
+def exec_and_complete(task: ExternalTask, variables: dict) -> TaskResult:
+    default_script = ""
+    script = variables.get(CAPYTHON_SCRIPT_ENTRYPOINT, default_script)
+    # pylint: disable=exec-used
+    exec(script or default_script, variables)  # noqa
+    # exec() passed, clean trash in globals
+    clean_vars(variables)
+
+    variables = serialize_vars(variables)
+    return task.complete(variables)
+
+
+def execute(task: ExternalTask) -> TaskResult:
+    variables = prepare_vars(task)
     try:
-        variables = prepare_vars(task)
-        exec(variables.get(CAPYTHON_SCRIPT_ENTRYPOINT, "") or "", variables)
-
-        # clean trash in globals
-        clean_vars(variables)
-
-        variables = serialize_vars(variables)
-        return task.complete(variables)
-
-    except Exception as exc:
+        return exec_and_complete(task=task, variables=variables)
+    except Exception as exc:  # pylint: disable=broad-except
         formatted = format_exc()
 
         clean_vars(variables)
@@ -95,22 +99,21 @@ def execute(task: ExternalTask):
 
         if isinstance(exc, BpmnException):
             return task.bpmn_error(
-                error_code=str(exc.bpmn_code), error_message=formatted,
+                error_code=str(exc.bpmn_code),
+                error_message=formatted,
                 variables=variables
             )
         return task.failure(
-            error_message="Python Exception",  error_details=formatted,
+            error_message="Python Exception",
+            error_details=formatted,
             **failure_recovery_opts(variables)
         )
 
 
-def handler(task: ExternalTask) -> TaskResult:
-    return execute(task)
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     worker = ExternalTaskWorker(
-        worker_id=CAPYTHON_ID, base_url=CAPYTHON_BASE_URL,
+        worker_id=CAPYTHON_ID,
+        base_url=CAPYTHON_BASE_URL,
         config={
             "maxTasks": CAPYTHON_MAX_TASKS,
             "lockDuration": CAPYTHON_LOCK_DURATION,
@@ -120,4 +123,4 @@ if __name__ == '__main__':
             "sleepSeconds": CAPYTHON_SLEEP_SECONDS
         }
     )
-    worker.subscribe(CAPYTHON_TOPICS, handler)
+    worker.subscribe(CAPYTHON_TOPICS, execute)
