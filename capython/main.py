@@ -60,12 +60,12 @@ def failure_recovery_opts(variables):
     )
 
 
+CAPYTHON_KNOWN_VARS = [
+    "__builtins__", "BpmnException", "__task__", "__task_id__",
+    "__topic__", "__task_retries__", "__task_retry_timeout__"
+]
 def clean_vars(variables):
-    known = [
-        "__builtins__", "BpmnException", "__task__", "__task_id__",
-        "__topic__", "__task_retries__", "__task_retry_timeout__"
-    ]
-    for var in known:
+    for var in CAPYTHON_KNOWN_VARS:
         if var not in variables:
             continue
         del variables[var]
