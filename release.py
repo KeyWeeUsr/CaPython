@@ -44,6 +44,8 @@ def main():
 
         cmd(["docker", "build", "--tag", img, "capython"], cwd=this_folder)
         cmd(["docker", "tag", img, latest], cwd=this_folder)
+        cmd(["docker", "push", img], cwd=this_folder)
+        cmd(["docker", "push", latest], cwd=this_folder)
 
     if exists(dest):
         remove(dest)
