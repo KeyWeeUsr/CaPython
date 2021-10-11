@@ -8,7 +8,7 @@
     <bpmn:serviceTask id="Activity_0at0kty" name="dummy print" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("hello python")
+          <camunda:inputParameter name="capython">print("Hello, Python")
 </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -20,7 +20,7 @@
     <bpmn:serviceTask id="Activity_0g1ih53" name="capture vars" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("setting global to_capture=123")
+          <camunda:inputParameter name="capython">print("setting global to_capture=123")
 to_capture=123
 </camunda:inputParameter>
         </camunda:inputOutput>
@@ -31,7 +31,7 @@ to_capture=123
     <bpmn:serviceTask id="Activity_1qmtupd" name="getting vars" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print(
+          <camunda:inputParameter name="capython">print(
     "getting to_capture variable:",
     globals().get("to_capture", "&lt;missing&gt;")
 )
@@ -45,7 +45,7 @@ assert to_capture == 123</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_0s04dla" name="throw BPMN error" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">raise BpmnException("bpmn-code-123")</camunda:inputParameter>
+          <camunda:inputParameter name="capython">raise BpmnException("bpmn-code-123")</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1ih1kfe</bpmn:incoming>
@@ -55,7 +55,7 @@ assert to_capture == 123</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_0b785hr" name="Failed to throw BPMN error" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">assert False, "This should never happen"</camunda:inputParameter>
+          <camunda:inputParameter name="capython">assert False, "This should never happen"</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0ps9fq7</bpmn:incoming>
@@ -68,7 +68,7 @@ assert to_capture == 123</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_1dh8spn" name="BPMN error encountered" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("BPMN code -&gt;", extracted_bpmn_code)
+          <camunda:inputParameter name="capython">print("BPMN code -&gt;", extracted_bpmn_code)
 print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -79,7 +79,7 @@ print("BPMN msg. -&gt;", extracted_bpmn_msg)</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_07t199v" name="boolean operators" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("and")
+          <camunda:inputParameter name="capython">print("and")
 assert (True and True) == True, True and True
 assert (True and False) == False, True and False
 print("or")
@@ -100,7 +100,7 @@ assert not False, not False
     <bpmn:serviceTask id="Activity_15put6n" name="comparisons" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">assert 1 &lt; 2
+          <camunda:inputParameter name="capython">assert 1 &lt; 2
 assert 1 &lt;= 1
 assert 2 &gt; 1
 assert 1 &gt;= 1
@@ -115,7 +115,7 @@ assert None is not object</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_0uzlrdg" name="numeric types" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("int")
+          <camunda:inputParameter name="capython">print("int")
 assert 1 + 1 == 2
 assert 1 - 1 == 0
 assert 4 * 5 == 20
@@ -148,7 +148,7 @@ assert str(round(pow(4.0, 6.0), 1)) == "4096.0"</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_0dxlbry" name="finished" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">print("-" * 12, "DONE", "-" * 12)</camunda:inputParameter>
+          <camunda:inputParameter name="capython">print("-" * 12, "DONE", "-" * 12)</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_157jao0</bpmn:incoming>
@@ -161,7 +161,7 @@ assert str(round(pow(4.0, 6.0), 1)) == "4096.0"</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_1qwvrro" name="globals()" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">from pprint import pprint
+          <camunda:inputParameter name="capython">from pprint import pprint
 x = 123
 
 pprint(globals())</camunda:inputParameter>
@@ -176,7 +176,7 @@ pprint(globals())</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_1ojycex" name="3rd-party&#10;(requirements)" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">import requests
+          <camunda:inputParameter name="capython">import requests
 print(requests)</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -186,7 +186,7 @@ print(requests)</camunda:inputParameter>
     <bpmn:serviceTask id="Activity_0r165t1" name="3rd-party&#10;(code)" camunda:type="external" camunda:topic="topic">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="python">import pip
+          <camunda:inputParameter name="capython">import pip
 pip.main(["install", "beautifulsoup4"])
 from bs4 import BeautifulSoup
 print(BeautifulSoup)</camunda:inputParameter>
