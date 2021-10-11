@@ -1,0 +1,5 @@
+coverage>=5.5
+pycodestyle>=2.7.0
+pylint>=2.9.3
+wemake-python-styleguide>=0.15.3
+camunda-external-task-client-python3>=4.0.0
