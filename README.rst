@@ -227,3 +227,21 @@ How to run
 CaPython is available as a standalone Docker image which can be used in a
 Docker engine, via Docker compose, in Kubernetes or any other engine which
 supports Docker images.
+
+You can find the tags `here <https://hub.docker.com/r/keyweeusr/capython>`__.
+There's always ``{version}-{python-tag}`` and ``{python-tag}`` format present.
+
+Sample
+======
+
+#. Navigate to ``examples`` folder.
+#. ``docker-compose up -d``
+#. ``docker-compose logs -f capython``
+#. Open browser at http://localhost:8080/camunda (user: demo, pass: demo).
+#. Open ``sample-flow.bpmn`` in Camunda Modeler and deploy it to
+   ``http://localhost:8080/engine-rest``.
+#. Run the flow by pressing the "play" button in Camunda Modeler and selecting
+   ``Start process instance``
+#. Observe the logs of ``capython`` service/container and the progress in
+   Camunda Cockpit (if you can catch it).
+#. Don't forget to spin the resources down with ``docker-compose down``
