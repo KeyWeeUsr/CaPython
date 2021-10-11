@@ -19,6 +19,7 @@ TAGS = [
     "3.6.15-bullseye", "3.6.15-alpine3.14", "3.6.15-alpine3.13",
 ]
 
+
 def cmd(*args, **kwargs):
     proc = Popen(*args, **kwargs)
     proc.communicate()
