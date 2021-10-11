@@ -7,16 +7,10 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
 
-  stdlib:
-    image: python:alpine
-    container_name: camunda-stdlib
-    ports:
-      - "127.0.0.1:9090:8080"
+  capython:
+    image: keyweeusr/capython:1.0.0-3.9.7-slim-buster
+    container_name: capython
     volumes:
-      - ./stdlib:/app
-      - ./stdlib/sample-requirements.txt:/app/sample-requirements.txt
+      - ./sample-requirements.txt:/app/sample-requirements.txt
     environment:
-      - PYTHON_REQUIREMENTS=/app/sample-requirements.txt
-    entrypoint:
-      - python
-      - /app/start.py
+      - CAPYTHON_REQUIREMENTS=/app/sample-requirements.txt
