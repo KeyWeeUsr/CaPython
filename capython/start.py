@@ -6,10 +6,10 @@ from subprocess import Popen
 
 def cmd(*args, **kwargs):
     print(args, kwargs)
-    proc = Popen(*args, **kwargs)
-    proc.communicate()
-    if proc.returncode:
-        sys.exit(proc.returncode)
+    with Popen(*args, **kwargs) as proc:
+        proc.communicate()
+        if proc.returncode:
+            sys.exit(proc.returncode)
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
             continue
         if not isfile(reqs):
             continue
-        cmd(["pip", "install", "-U", "-r", reqs])
+        cmd(["pip", "install", "-U", "-r", req])
     cmd(["python", "-u", "/app/main.py"])
 
 
