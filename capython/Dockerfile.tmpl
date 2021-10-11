@@ -1,0 +1,5 @@
+# -*- mode: dockerfile -*-
+FROM python:{tag}
+WORKDIR /app
+COPY start.py main.py /app/
+ENTRYPOINT ["python", "/app/start.py"]
