@@ -29,15 +29,6 @@ CAPYTHON_RETRIES = int(environ.get("CAPYTHON_RETRIES", 3))
 CAPYTHON_RETRY_TIMEOUT = int(environ.get("CAPYTHON_RETRY_TIMEOUT", 5000))
 CAPYTHON_SLEEP_SECONDS = int(environ.get("CAPYTHON_SLEEP_SECONDS", 30))
 
-DEFAULT_CONFIG = {
-    "maxTasks": CAPYTHON_MAX_TASKS,
-    "lockDuration": CAPYTHON_LOCK_DURATION,
-    "asyncResponseTimeout": CAPYTHON_ASYNC_RESPONSE_TIMEOUT,
-    "retries": CAPYTHON_RETRIES,
-    "retryTimeout": CAPYTHON_RETRY_TIMEOUT,
-    "sleepSeconds": CAPYTHON_SLEEP_SECONDS
-}
-
 
 class BpmnException(Exception):
     def __init__(self, code, *args, **kwargs):
@@ -120,6 +111,13 @@ def handler(task: ExternalTask) -> TaskResult:
 if __name__ == '__main__':
     worker = ExternalTaskWorker(
         worker_id=CAPYTHON_ID, base_url=CAPYTHON_BASE_URL,
-        config=DEFAULT_CONFIG
+        config={
+            "maxTasks": CAPYTHON_MAX_TASKS,
+            "lockDuration": CAPYTHON_LOCK_DURATION,
+            "asyncResponseTimeout": CAPYTHON_ASYNC_RESPONSE_TIMEOUT,
+            "retries": CAPYTHON_RETRIES,
+            "retryTimeout": CAPYTHON_RETRY_TIMEOUT,
+            "sleepSeconds": CAPYTHON_SLEEP_SECONDS
+        }
     )
     worker.subscribe(CAPYTHON_TOPICS, handler)
