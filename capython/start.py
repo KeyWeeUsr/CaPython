@@ -15,8 +15,14 @@ def cmd(*args, **kwargs):
 def main():
     cmd(["pip", "install", "-U", "pip"])
     cmd(["pip", "install", "camunda-external-task-client-python3"])
-    reqs = environ.get("PYTHON_REQUIREMENTS", "/non-existing")
-    if exists(reqs) and isfile(reqs):
+
+    reqs = environ.get("CAPYTHON_REQUIREMENTS", "/non-existing")
+    reqs_sep = environ.get("CAPYTHON_REQUIREMENTS_SEPARATOR", ",")
+    for req in reqs.split(reqs_sep):
+        if not exists(reqs):
+            continue
+        if not isfile(reqs):
+            continue
         cmd(["pip", "install", "-U", "-r", reqs])
     cmd(["python", "-u", "/app/main.py"])
 
